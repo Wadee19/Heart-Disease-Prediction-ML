@@ -1,0 +1,22 @@
+name: tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      - name: Train and evaluate leakage-safe pipeline
+        run: python src/train.py
+      - name: Upload reproducible metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-metrics
+          path: artifacts/metrics.json

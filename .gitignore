@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+artifacts/
+*.joblib
+.ipynb_checkpoints/
+.DS_Store
