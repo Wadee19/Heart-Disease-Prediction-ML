@@ -1,5 +1,7 @@
 name: tests
+
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,3 +13,10 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: pytest -q
+      - name: Train and evaluate leakage-safe pipeline
+        run: python src/train.py
+      - name: Upload reproducible metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: evaluation-metrics
+          path: artifacts/metrics.json
