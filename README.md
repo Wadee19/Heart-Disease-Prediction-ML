@@ -38,9 +38,22 @@ Source/reference: https://archive.ics.uci.edu/dataset/145/statlog+heart
 
 V2 compares Logistic Regression and Random Forest. Model selection is based on **5-fold stratified CV ROC-AUC** on the training split only. The selected model is then evaluated once on the untouched test set.
 
-Reported metrics: Accuracy, Precision, Recall, F1, ROC-AUC, and cross-validation ROC-AUC mean/std.
+### Verified V2 results
 
-No V2 performance number is hard-coded into this README. Run the pipeline to reproduce the result on your environment.
+GitHub Actions reproduces the full pipeline from a clean environment and publishes `artifacts/metrics.json` as a workflow artifact.
+
+| Metric | Result |
+|---|---:|
+| Selected model | Random Forest |
+| Random Forest CV ROC-AUC | **0.913 ± 0.043** |
+| Logistic Regression CV ROC-AUC | **0.913 ± 0.042** |
+| Holdout ROC-AUC | **0.882** |
+| Holdout recall | **83.3%** |
+| Holdout precision | **74.1%** |
+| Holdout F1 | **78.4%** |
+| Holdout accuracy | **79.6%** |
+
+The holdout contains 54 observations and remains untouched until final evaluation. These numbers intentionally replace the legacy notebook's higher accuracy claim because the earlier workflow had leakage from pre-split SMOTE.
 
 ## Project structure
 
@@ -53,7 +66,8 @@ No V2 performance number is hard-coded into this README. Run the pipeline to rep
 ├── tests/
 │   └── test_pipeline.py                # pipeline/data smoke tests
 ├── app.py                              # optional Streamlit demo
-├── .github/workflows/tests.yml         # CI
+├── MODEL_CARD.md
+├── .github/workflows/tests.yml         # CI + end-to-end training
 ├── requirements.txt
 └── README.md
 ```
@@ -77,7 +91,7 @@ streamlit run app.py
 ## Run tests
 
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
 ## Methodological notes
